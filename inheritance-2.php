@@ -41,7 +41,7 @@ class Game extends Produk
 {
    public function getInfoProduk()
    {
-      $str = "Game : {$this->judul} | {$this->penulis}, {$this->penerbit} (Rp. {$this->harga}) - {$this->waktuMain} Jam.";
+      $str = "Game : - {$this->waktuMain} Jam.";
       return $str;
    }
 }
