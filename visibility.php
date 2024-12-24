@@ -1,13 +1,17 @@
-<!-- overiding memungkinkan kita untuk menggunakan method dan construct dari parent class -->
-<!-- overiding diawali dengan syntax parent:: -->
+<!-- visibility membuat atribut atau method tidak bisa diakses dari luar -->
 <?php
+
 class Produk
 {
    public $judul;
    public $penulis;
-   public $penerbit;
-   public $harga;
-   public $waktuMain;
+   protected $diskon = 0;
+
+   // visibility private, membuat atribut tidak bisa dipanggil dari luar. bahkan di dalam child class juga tidak bisa. hanya bisa di class tersebut
+   private $penerbit;
+
+   // visibility protected, membuat atribut tidak bisa dipanggil dari luar. kecuali di dalam class dan child class yang bersangkutan
+   protected $harga;
 
    public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0)
    {
@@ -22,6 +26,12 @@ class Produk
       $str = " {$this->judul} | {$this->penulis}, {$this->penerbit} (Rp. {$this->harga})";
       return $str;
    }
+
+   // buat method untuk mengakses atribut penerbit yang private
+   public function getPenerbit()
+   {
+      return $this->penerbit;
+   }
 }
 
 class Komik extends Produk
@@ -30,14 +40,12 @@ class Komik extends Produk
 
    public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0, $jmlHalaman = 0)
    {
-      // ini merupakan contoh overiding, kita menggunakan construct yang sama dengan parent. 
       parent::__construct($judul, $penulis, $penerbit, $harga);
       $this->jmlHalaman = $jmlHalaman;
    }
 
    public function getInfoProduk()
    {
-      // disini juga merupakan contoh overriding, memanggil method dari parent dengan nama method yang sama didalam child class. overriding tidak bisa dimasukkan ke dalam string
       $str = "Komik :" . parent::getInfoProduk() . " - {$this->jmlHalaman} Halaman.";
       return $str;
    }
@@ -58,6 +66,17 @@ class Game extends Produk
       $str = "Game :" . parent::getInfoProduk() . "  - {$this->waktuMain} Jam.";
       return $str;
    }
+
+   public function setDiskon($diskon)
+   {
+      $this->diskon = $diskon;
+   }
+
+   // cara menampilkan atribut protected, buatlah sebuah method yang mengembalikan nilai dari atribut protected
+   public function getHargaGame()
+   {
+      return $this->harga - ($this->harga * $this->diskon / 100);
+   }
 }
 
 class CetakInfoProduk
@@ -75,3 +94,11 @@ $produk2 = new Game("Uncharted", "Neil Druckmann", "Sony Computer", 250000, 50);
 echo $produk1->getInfoProduk();
 echo "<br>";
 echo $produk2->getInfoProduk();
+echo "<hr>";
+
+// panggil harga yang merupakan atribut protected
+$produk2->setDiskon(50);
+echo $produk2->getHargaGame();
+echo "<br>";
+// panggil penerbit yang merupakan atribut private
+echo $produk2->getPenerbit();
