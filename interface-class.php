@@ -1,12 +1,19 @@
-<!-- kelas abstrak merupakan kelas yang tidak dapat diinstansiasi secara langsung -->
-<!-- kelas abstrak berfungsi sebagai kerangka dasar untuk kelas turunannya -->
+<!-- kelas interface adalah kelas murni yang sama sekali tidak memiliki implementasi -->
+<!-- kelas interface tidak boleh memiliki properti, hanya deklarasi method saja. dan method wajib digunakan di kelas turunan -->
+<!-- untuk kelas turunan dari kelas interface, tidak menggunakan extends tapi implements -->
+<!-- semua method di kelas interface harus public visibility, dan boleh menggunakan construct -->
+<!-- kelas turunan boleh menerapkan lebih dari 1 implements -->
 
 <?php
+// keyword untuk membuat class interface
+interface infoProduk
+{
+   public function getInfoProduk();
+}
 
-// untuk membuat class abstract tinggal tambahkan saja keyword abstract
 abstract class Produk
 {
-   private $judul,
+   protected $judul,
       $penulis,
       $penerbit,
       $diskon = 0,
@@ -20,15 +27,7 @@ abstract class Produk
       $this->harga = $harga;
    }
 
-   // jika menggunakan abstract method, hanya tampilkan interface saja tanpa implementasi
-   // method abstract harus digunakan di kelas turunan
-   abstract public function getInfoProduk();
-
-   public function getInfo()
-   {
-      $str = " {$this->judul} | {$this->penulis}, {$this->penerbit} (Rp. {$this->harga})";
-      return $str;
-   }
+   abstract public function getInfo();
 
    public function getPenerbit()
    {
@@ -50,7 +49,6 @@ abstract class Produk
       return $this->harga - ($this->harga * $this->diskon / 100);
    }
 
-   // ini merupakkan setter method
    public function setJudul($judul)
    {
       if (!is_string($judul)) {
@@ -75,7 +73,8 @@ abstract class Produk
    }
 }
 
-class Komik extends Produk
+// implementasi kelas interface dengan menggunakan keyword implements
+class Komik extends Produk implements infoProduk
 {
    public $jmlHalaman;
 
@@ -85,7 +84,13 @@ class Komik extends Produk
       $this->jmlHalaman = $jmlHalaman;
    }
 
-   // penerapan abstract method dari class Produk
+   public function getInfo() 
+   {
+      $str = " {$this->judul} | {$this->penulis}, {$this->penerbit} (Rp. {$this->harga})";
+      return $str;
+   }
+
+   // ini merupakan method dari interface, yang wajib digunakan jika mengimplements kelas interface
    public function getInfoProduk()
    {
       $str = "Komik :" . $this->getInfo() . " - {$this->jmlHalaman} Halaman.";
@@ -93,7 +98,8 @@ class Komik extends Produk
    }
 }
 
-class Game extends Produk
+// implementasi kelas interface dengan menggunakan keyword implements
+class Game extends Produk implements infoProduk
 {
    public $waktuMain;
 
@@ -103,7 +109,13 @@ class Game extends Produk
       $this->waktuMain = $waktuMain;
    }
 
-   // penerapan abstract method dari class Produk
+   public function getInfo() 
+   {
+      $str = " {$this->judul} | {$this->penulis}, {$this->penerbit} (Rp. {$this->harga})";
+      return $str;
+   }
+
+   // ini merupakan method dari interface, yang wajib digunakan jika mengimplements kelas interface
    public function getInfoProduk()
    {
       $str = "Game :" . $this->getInfo() . "  - {$this->waktuMain} Jam.";
@@ -123,10 +135,10 @@ class CetakInfoProduk
    public function cetak()
    {
       $str = 'DAFTAR PRODUK : <br>';
-      foreach($this->daftarProduk as $item) {
+      foreach ($this->daftarProduk as $item) {
          $str .= '- ' . $item->getInfoProduk() . '<br>';
       }
-      return $str;   
+      return $str;
    }
 }
 
